@@ -10,6 +10,11 @@ import { TipoProductoModule } from './tipo-producto/tipo-producto.module';
 import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { RolModule } from './rol/rol.module';
+import { InitModule } from './init/init.module';
+import { EmpresaModule } from './empresa/empresa.module';
+import { TiendaModule } from './tienda/tienda.module';
+import { TipoDocumentoModule } from './tipo-documento/tipo-documento.module';
+import { TipoDocumentoIdentificacionModule } from './tipo-documento-identificacion/tipo-documento-identificacion.module';
 
 @Module({
   imports: [
@@ -33,7 +38,7 @@ import { RolModule } from './rol/rol.module';
       cli: {
         migrationsDir: 'src/db/migrations'
       },
-      logging: true
+      // logging: true
       // PARA DEV
       // autoLoadEntities: true,
       // synchronize: false,
@@ -45,8 +50,13 @@ import { RolModule } from './rol/rol.module';
     AuthModule,
     UsuariosModule,
     RolModule,
+    InitModule,
+    EmpresaModule,
+    TiendaModule,
+    TipoDocumentoModule,
+    TipoDocumentoIdentificacionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

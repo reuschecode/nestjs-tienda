@@ -9,4 +9,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   providers: [SubtipoProductoService],
   controllers: [SubtipoProductoController]
 })
-export class SubtipoProductoModule {}
+export class SubtipoProductoModule { }

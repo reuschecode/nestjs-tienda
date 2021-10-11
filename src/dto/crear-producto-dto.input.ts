@@ -1,8 +1,8 @@
 import { IsDefined, IsNotEmpty, IsNumber, IsPositive, IsString, Length } from "class-validator";
 
-export class CrearProductoDTO{
+export class CrearProductoDTO {
     @IsString()
-    @Length(3,45)
+    @Length(3, 45)
     @IsNotEmpty()
     nombre: string;
 
@@ -10,9 +10,6 @@ export class CrearProductoDTO{
     @IsNumber()
     @IsPositive()
     precio: number;
-
-    @IsDefined()
-    empresa: number;
 
     subtipoProducto: number;
 

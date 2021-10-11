@@ -11,10 +11,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory(config: ConfigService){
+      useFactory(config: ConfigService) {
         return {
           secret: config.get("JWT_SECRET"),
-          signOptions:{
+          signOptions: {
             expiresIn: "16h"
           }
         }
@@ -23,5 +23,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],//PassportModule.register({session: true})
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
+  exports: [AuthService]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { CrearUsuarioDTO } from 'src/dto/crear-usuario-dto.input';
 import { AuthService } from './auth.service';
 import { Usuario } from 'src/entities/usuario.entity';
@@ -11,23 +11,27 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly authService: AuthService){}
+    constructor(private readonly authService: AuthService) { }
 
     @Post('login')
-    async login(@Body() usuarioLogeando: IniciarSesionDTO, @Res({passthrough: true}) res: Response){
+    async login(@Body() usuarioLogeando: IniciarSesionDTO, @Res({ passthrough: true }) res: Response) {
         const jwt = await this.authService.login(usuarioLogeando);
 
-        if(jwt === null){
+        if (jwt === null) {
             throw new ConflictException("Email o contraseña incorrectos.");
         }
 
-        res.cookie('access-token', jwt, {httpOnly: true});
+        res.cookie('access-token', jwt, { httpOnly: true });
 
-        return {message: "Inicio de sesión exitoso."};
+        return { message: "Inicio de sesión exitoso." };
     }
 
     @Post('register')
-    async register(@Body() crearUsuario: CrearUsuarioDTO){
+    async register(@Body() crearUsuario: CrearUsuarioDTO) {
+        if (await this.authService.existsByEmail(crearUsuario.email)) {
+            throw new BadRequestException("Ya existe un usuario con ese email.");
+        }
+
         const nuevoUsuario = new Usuario();
         nuevoUsuario.nombres = crearUsuario.nombres;
         nuevoUsuario.apellidos = crearUsuario.apellidos;
@@ -43,19 +47,27 @@ export class AuthController {
 
         await this.authService.register(nuevoUsuario);
 
-        return {message: "Registro del usuario '"+nuevoUsuario.email+"' exitoso."}
+        return { message: "Registro del usuario '" + nuevoUsuario.email + "' exitoso." }
     }
 
     @Post('logout')
-    async logout(@Res({passthrough: true}) res: Response){
+    async logout(@Res({ passthrough: true }) res: Response) {
         res.clearCookie('access-token');
 
-        return {message: "Se salió de sesión."};
+        return { message: "Se salió de sesión." };
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Get('protected')
-    getHello(): string{
+    getHello(): string {
         return 'HOLA QUE PASA? SI PASASTE LA PROTECCIÓN PA!';
     }
+
+    /*
+    @UseGuards(AuthGuard('jwt'))
+    @Get('usuario')
+    usuario(@Req() req) {
+        return this.authService.usuario(req.cookies['access-token']);
+    }
+    */
 }
